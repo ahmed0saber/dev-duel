@@ -1,6 +1,6 @@
 import { getCard } from "../cards/index.js";
 import { getEffectiveAtk } from "../engine/gameRules.js";
-import { cardArtSvg } from "./cardArt.js";
+import { cardArt } from "./cardArt.js";
 
 export function renderCard(card, options = {}) {
   const def = getCard(card.cardId);
@@ -23,7 +23,7 @@ export function renderCard(card, options = {}) {
   el.innerHTML = `
     <span class="dd-card__kind">${def.type === "monster" ? "FRAME" : "TRAP"}</span>
     <span class="dd-card__name">${def.name}</span>
-    <span class="dd-card__art">${cardArtSvg(def)}</span>
+    <span class="dd-card__art">${cardArt(def)}</span>
     <span class="dd-card__sub">${def.description}</span>
     ${
       def.type === "monster"

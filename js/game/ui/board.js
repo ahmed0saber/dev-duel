@@ -5,7 +5,7 @@ import { runAiBurst } from "../ai/aiController.js";
 import { fieldOfController, getEffectiveAtk } from "../engine/gameRules.js";
 import { renderCard, renderCardBack } from "./cardRenderer.js";
 import { renderDebugPanel } from "./debugPanel.js";
-import { cardArtSvg } from "./cardArt.js";
+import { cardArt } from "./cardArt.js";
 
 const ui = {
   selectedHandUid: null,
@@ -414,7 +414,7 @@ function paintInspect(root, state) {
   const { card, def } = ui.inspect;
   const atk = def.type === "monster" ? getEffectiveAtk(state, card) : null;
   panel.innerHTML = `
-    <div class="dd-inspect__art">${cardArtSvg(def)}</div>
+    <div class="dd-inspect__art">${cardArt(def)}</div>
     <h3>${def.name}</h3>
     <p class="dd-inspect__sub">${def.subtitle}</p>
     <p class="dd-inspect__desc">${def.description}</p>
@@ -448,11 +448,26 @@ function extraLocationLabel(location) {
   return "Already compiled";
 }
 
-function extraSummonHint(cardId) {
+function extraMaterialsMarkup(cardId) {
   const recipe = FUSION_RECIPES.find((entry) => entry.result === cardId);
-  if (!recipe) return "No Git Merge recipe exists for this frame.";
-  const names = recipe.materials.map((id) => getCard(id).name);
-  return `Summon with Git Merge in Main Phase: send ${names[0]} and ${names[1]} you control to the graveyard. Does not use your one summon. Git Conflict can cancel the merge.`;
+  if (!recipe) {
+    return `<p class="dd-zone-item__summon">No Git Merge recipe exists for this frame.</p>`;
+  }
+  const chips = recipe.materials
+    .map((id) => {
+      const def = getCard(id);
+      return `
+        <div class="dd-zone-mat">
+          <div class="dd-zone-mat__art">${cardArt(def)}</div>
+          <span class="dd-zone-mat__name">${def.name}</span>
+        </div>
+      `;
+    })
+    .join(`<span class="dd-zone-mat__plus" aria-hidden="true">+</span>`);
+  return `
+    <p class="dd-zone-item__summon">Git Merge in Main Phase. Send both frames you control:</p>
+    <div class="dd-zone-mats">${chips}</div>
+  `;
 }
 
 function renderExtraColumn(player, title) {
@@ -460,16 +475,16 @@ function renderExtraColumn(player, title) {
   const items = EXTRA_POOL.map((def) => {
     const location = extraLocation(player, def.id);
     return `
-      <article class="dd-zone-item${location === "available" ? "" : " is-used"}">
-        <div class="dd-zone-item__art">${cardArtSvg(def)}</div>
+      <article class="dd-zone-item dd-zone-item--extra${location === "available" ? "" : " is-used"}">
+        <div class="dd-zone-item__art">${cardArt(def)}</div>
         <div>
           <p class="dd-zone-item__kicker">${extraLocationLabel(location)}</p>
           <h4>${def.name}</h4>
           <p class="dd-zone-item__sub">${def.subtitle}</p>
           <p>${def.description}</p>
           <p class="dd-zone-item__atk">ATK ${def.attack}</p>
-          <p class="dd-zone-item__summon">${extraSummonHint(def.id)}</p>
         </div>
+        ${extraMaterialsMarkup(def.id)}
       </article>
     `;
   }).join("");
@@ -489,7 +504,7 @@ function renderGraveColumn(player, title) {
           const atk = def.type === "monster" ? `<p class="dd-zone-item__atk">ATK ${def.attack}</p>` : "";
           return `
             <article class="dd-zone-item">
-              <div class="dd-zone-item__art">${cardArtSvg(def)}</div>
+              <div class="dd-zone-item__art">${cardArt(def)}</div>
               <div>
                 <p class="dd-zone-item__kicker">${def.type}</p>
                 <h4>${def.name}</h4>

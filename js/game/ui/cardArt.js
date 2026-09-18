@@ -116,3 +116,7 @@ export function cardArtSvg(def) {
   }
   return svg(def.art.hue, trapMotif(def.art.hue, def.art.motif));
 }
+
+export function cardArt(def) {
+  return `<img src="./assets/cards/${def.id}.jpg" alt="${def.name}" class="dd-card-art-img">`;
+}
