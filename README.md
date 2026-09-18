@@ -72,4 +72,4 @@ These live in `js/game/engine/config.js` so they can be changed in one place:
 
 ## Tuning the AI
 
-Weights are in `js/game/ai/scoringWeights.js`. The debug sidebar shows candidate actions, scores, and the evaluation breakdown after each AI move.
+Weights are in `js/game/ai/scoringWeights.js`. The right sidebar **AI Debugger** tab shows candidate actions, scores, and the evaluation breakdown after each AI move. **Game State** shows the duel feed and the currently hovered card.

@@ -5,13 +5,14 @@ import { runAiBurst } from "../ai/aiController.js";
 import { fieldOfController, getEffectiveAtk } from "../engine/gameRules.js";
 import { renderCard, renderCardBack } from "./cardRenderer.js";
 import { renderDebugPanel } from "./debugPanel.js";
+import { cardArtSvg } from "./cardArt.js";
 
 const ui = {
   selectedHandUid: null,
   selectedAttackerUid: null,
   targeting: null,
   inspect: null,
-  debug: true,
+  sidebarTab: "state",
   busy: false,
 };
 
@@ -31,13 +32,13 @@ export function mountBoard(root, engine) {
     render(root, engine);
   });
 
-  root.querySelector("#dd-debug-toggle").addEventListener("click", () => {
-    ui.debug = !ui.debug;
-    root.classList.toggle("debug-on", ui.debug);
-    render(root, engine);
-  });
-
   root.addEventListener("click", (event) => {
+    const tab = event.target.closest("[data-sidebar-tab]")?.dataset.sidebarTab;
+    if (tab) {
+      ui.sidebarTab = tab;
+      syncSidebarTabs(root);
+      return;
+    }
     const action = event.target.closest("[data-act]")?.dataset.act;
     if (!action) return;
     handleCommand(root, engine, action);
@@ -47,8 +48,8 @@ export function mountBoard(root, engine) {
     render(root, engine);
   });
 
-  root.classList.toggle("debug-on", ui.debug);
   bindStatic(root, engine);
+  syncSidebarTabs(root);
   render(root, engine);
 }
 
@@ -305,13 +306,18 @@ function render(root, engine) {
   extra.innerHTML = human.extraPool.map((c) => `<li>${getCard(c.cardId).name} (${getCard(c.cardId).attack})</li>`).join("") || "<li>None remaining</li>";
 
   const log = root.querySelector("#dd-log");
-  log.innerHTML = state.log
-    .slice(-12)
+  const logHtml = state.log
+    .slice(-40)
     .map((entry) => `<li>${entry.text}</li>`)
     .join("");
-  log.scrollTop = log.scrollHeight;
+  if (log.innerHTML !== logHtml) {
+    log.innerHTML = logHtml;
+    log.scrollTop = log.scrollHeight;
+  }
 
   paintInspect(root, state);
+  renderDebugPanel(root.querySelector("#dd-ai-debug"), engine);
+  syncSidebarTabs(root);
 
   const canAdvance = legal.some((a) => a.type === ACTION.ADVANCE_PHASE);
   const advance = root.querySelector("#dd-advance");
@@ -332,8 +338,6 @@ function render(root, engine) {
 
   renderModal(root, state);
   renderResult(root, state);
-  root.querySelector("#dd-debug").hidden = !ui.debug;
-  if (ui.debug) renderDebugPanel(root.querySelector("#dd-debug"), engine);
 
   root.dataset.phase = state.phase;
   root.dataset.actor = state.activePlayer;
@@ -371,18 +375,30 @@ function paintZone(node, cards, state, options) {
 function paintInspect(root, state) {
   const panel = root.querySelector("#dd-inspect");
   if (!ui.inspect) {
-    panel.innerHTML = `<h3>Inspect</h3><p>Hover a card to read its protocol.</p>`;
+    panel.innerHTML = `<p class="dd-inspect__empty">Hover a card to inspect it.</p>`;
     return;
   }
   const { card, def } = ui.inspect;
   const atk = def.type === "monster" ? getEffectiveAtk(state, card) : null;
   panel.innerHTML = `
+    <div class="dd-inspect__art">${cardArtSvg(def)}</div>
     <h3>${def.name}</h3>
     <p class="dd-inspect__sub">${def.subtitle}</p>
     <p>${def.description}</p>
     ${def.type === "monster" ? `<p class="dd-inspect__atk">ATK ${atk}</p>` : ""}
     <p class="dd-inspect__tags">${(def.tags || []).join(" · ")}</p>
   `;
+}
+
+function syncSidebarTabs(root) {
+  root.querySelectorAll("[data-sidebar-tab]").forEach((button) => {
+    const on = button.dataset.sidebarTab === ui.sidebarTab;
+    button.classList.toggle("is-active", on);
+    button.setAttribute("aria-selected", String(on));
+  });
+  root.querySelectorAll("[data-sidebar-panel]").forEach((panel) => {
+    panel.classList.toggle("is-active", panel.dataset.sidebarPanel === ui.sidebarTab);
+  });
 }
 
 function hintText(state, legal) {
@@ -467,7 +483,6 @@ function shellHtml() {
           <strong id="dd-actor">YOUR MOVE</strong>
           <span id="dd-turn">Turn 1</span>
           <span id="dd-phase">MAIN</span>
-          <button id="dd-debug-toggle" class="dd-btn" type="button">Debug</button>
         </div>
       </header>
       <div class="dd-layout">
@@ -482,19 +497,8 @@ function shellHtml() {
             </div>
             <div id="dd-ai-field" class="dd-field"></div>
           </section>
-          <section class="dd-center">
+          <section class="dd-lane">
             <button id="dd-direct" class="dd-direct" type="button" hidden>Direct strike</button>
-            <div class="dd-center__cols">
-              <div>
-                <h3>Feed</h3>
-                <ol id="dd-log" class="dd-log"></ol>
-              </div>
-              <div>
-                <div id="dd-inspect" class="dd-inspect"></div>
-                <h3>Extra Pool</h3>
-                <ul id="dd-extra" class="dd-extra"></ul>
-              </div>
-            </div>
           </section>
           <section class="dd-row">
             <div id="dd-player-field" class="dd-field"></div>
@@ -516,7 +520,29 @@ function shellHtml() {
             </div>
           </section>
         </div>
-        <aside id="dd-debug" class="dd-debug"></aside>
+        <aside class="dd-sidebar">
+          <div class="dd-tabs" role="tablist">
+            <button class="dd-tab is-active" type="button" role="tab" data-sidebar-tab="state" aria-selected="true">Game State</button>
+            <button class="dd-tab" type="button" role="tab" data-sidebar-tab="debug" aria-selected="false">AI Debugger</button>
+          </div>
+          <div class="dd-tab-panel is-active" data-sidebar-panel="state" role="tabpanel">
+            <section>
+              <h3>Hovered card</h3>
+              <div id="dd-inspect" class="dd-inspect"></div>
+            </section>
+            <section>
+              <h3>Extra Pool</h3>
+              <ul id="dd-extra" class="dd-extra"></ul>
+            </section>
+            <section>
+              <h3>Feed</h3>
+              <ol id="dd-log" class="dd-log"></ol>
+            </section>
+          </div>
+          <div class="dd-tab-panel" data-sidebar-panel="debug" role="tabpanel">
+            <div id="dd-ai-debug" class="dd-debug"></div>
+          </div>
+        </aside>
       </div>
     </div>
     <div id="dd-modal" class="dd-overlay" hidden>
