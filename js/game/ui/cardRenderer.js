@@ -24,7 +24,7 @@ export function renderCard(card, options = {}) {
     <span class="dd-card__kind">${def.type === "monster" ? "FRAME" : "TRAP"}</span>
     <span class="dd-card__name">${def.name}</span>
     <span class="dd-card__art">${cardArtSvg(def)}</span>
-    <span class="dd-card__sub">${def.subtitle}</span>
+    <span class="dd-card__sub">${def.description}</span>
     ${
       def.type === "monster"
         ? `<span class="dd-card__atk${atkChanged ? " is-mod" : ""}">ATK ${atk}</span>`

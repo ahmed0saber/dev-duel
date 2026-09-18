@@ -1,5 +1,5 @@
 import { ACTION, PHASE, PLAYER } from "../engine/config.js";
-import { getCard, findFusionRecipe } from "../cards/index.js";
+import { EXTRA_POOL, FUSION_RECIPES, getCard, findFusionRecipe } from "../cards/index.js";
 import { generateLegalActions } from "../ai/actionGenerator.js";
 import { runAiBurst } from "../ai/aiController.js";
 import { fieldOfController, getEffectiveAtk } from "../engine/gameRules.js";
@@ -13,6 +13,7 @@ const ui = {
   targeting: null,
   inspect: null,
   sidebarTab: "state",
+  zoneModal: null,
   busy: false,
 };
 
@@ -33,6 +34,10 @@ export function mountBoard(root, engine) {
   });
 
   root.addEventListener("click", (event) => {
+    if (event.target.id === "dd-zone") {
+      closeZoneModal(root, engine);
+      return;
+    }
     const tab = event.target.closest("[data-sidebar-tab]")?.dataset.sidebarTab;
     if (tab) {
       ui.sidebarTab = tab;
@@ -69,9 +74,9 @@ function bindStatic(root, engine) {
     if (!cardEl || ui.busy) return;
     handleFieldClick(root, engine, cardEl.dataset.uid, PLAYER.AI);
   });
-  root.querySelector("#dd-direct").addEventListener("click", () => {
-    if (ui.busy) return;
-    tryDirect(engine);
+  window.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape" || !ui.zoneModal) return;
+    closeZoneModal(root, engine);
   });
 }
 
@@ -82,6 +87,20 @@ function handleCommand(root, engine, action) {
     resetSelection();
     render(root, engine);
   }
+  if (action === "open-extra") {
+    ui.zoneModal = "extra";
+    renderZoneModal(root, engine.getState());
+    return;
+  }
+  if (action === "open-grave") {
+    ui.zoneModal = "grave";
+    renderZoneModal(root, engine.getState());
+    return;
+  }
+  if (action === "close-zone") {
+    closeZoneModal(root, engine);
+    return;
+  }
   if (action === "allow") dispatchPlayer(root, engine, { type: ACTION.PASS_RESPONSE, playerId: PLAYER.HUMAN });
   if (action === "conflict") {
     const state = engine.getState();
@@ -89,6 +108,11 @@ function handleCommand(root, engine, action) {
     if (card) dispatchPlayer(root, engine, { type: ACTION.RESPOND, playerId: PLAYER.HUMAN, cardUid: card.uid, cardId: "git-conflict" });
   }
   if (action === "rematch") window.location.reload();
+}
+
+function closeZoneModal(root, engine) {
+  ui.zoneModal = null;
+  renderZoneModal(root, engine.getState());
 }
 
 function resetSelection() {
@@ -225,17 +249,26 @@ async function maybeRunAi(root, engine) {
   if (state.winner || actor !== PLAYER.AI) return;
   ui.busy = true;
   root.classList.add("is-ai-turn");
-  setStatus(root, "AI synthesizing move…");
+  setAiStatus(root, "AI synthesizing move…");
   await runAiBurst(engine, PLAYER.AI, engine.getState().config.aiActionDelayMs);
   ui.busy = false;
   root.classList.remove("is-ai-turn");
-  setStatus(root, "");
+  setAiStatus(root, "");
   render(root, engine);
 }
 
 function setStatus(root, text) {
   const node = root.querySelector("#dd-status");
-  if (node) node.textContent = text;
+  if (!node) return;
+  node.textContent = text;
+  node.hidden = !text;
+}
+
+function setAiStatus(root, text) {
+  const node = root.querySelector("#dd-ai-status");
+  if (!node) return;
+  node.textContent = text;
+  node.hidden = !text;
 }
 
 function render(root, engine) {
@@ -248,6 +281,8 @@ function render(root, engine) {
   const playable = new Set(legal.filter((a) => a.cardUid).map((a) => a.cardUid));
   const attackable = new Set(legal.filter((a) => a.type === ACTION.ATTACK).map((a) => a.attackerUid));
   const attackTargets = new Set(legal.filter((a) => a.type === ACTION.ATTACK && a.targetUid !== "DIRECT").map((a) => a.targetUid));
+  const canDirect = legal.some((a) => a.type === ACTION.ATTACK && a.targetUid === "DIRECT");
+  const showDirect = Boolean(canDirect && ui.selectedAttackerUid);
 
   root.querySelector("#dd-ai-hp").textContent = ai.hp;
   root.querySelector("#dd-human-hp").textContent = human.hp;
@@ -256,14 +291,15 @@ function render(root, engine) {
   root.querySelector("#dd-turn").textContent = `Turn ${state.turnNumber}`;
   root.querySelector("#dd-phase").textContent = state.phase.toUpperCase();
   root.querySelector("#dd-actor").textContent = state.activePlayer === PLAYER.HUMAN ? "YOUR MOVE" : "AI MOVE";
-  root.querySelector("#dd-ai-meta").textContent = `Deck ${ai.deck.length} · Grave ${ai.graveyard.length} · Extra ${ai.extraPool.length} · Hand ${ai.hand.length}`;
+  root.querySelector("#dd-ai-meta").textContent = `Deck ${ai.deck.length} · Grave ${ai.graveyard.length} · Extra ${ai.extraPool.length}`;
   root.querySelector("#dd-human-meta").textContent = `Deck ${human.deck.length} · Grave ${human.graveyard.length} · Extra ${human.extraPool.length}`;
 
   document.querySelectorAll(".dd-phase-pip").forEach((pip) => {
     pip.classList.toggle("is-on", pip.dataset.phase === state.phase);
   });
 
-  paintZone(root.querySelector("#dd-ai-field"), ai.field, state, {
+  const aiField = root.querySelector("#dd-ai-field");
+  paintZone(aiField, ai.field, state, {
     attackable: false,
     targetableUids: targetableSet(state, attackTargets),
     onHover: (card, def) => {
@@ -271,6 +307,12 @@ function render(root, engine) {
       paintInspect(root, state);
     },
   });
+  aiField.classList.toggle("is-direct-target", showDirect && ai.field.length === 0);
+  if (showDirect && ai.field.length === 0) {
+    aiField.innerHTML = `
+      <button class="dd-direct is-ready" data-act="direct" type="button">Direct Strike</button>
+    `;
+  }
   paintZone(root.querySelector("#dd-player-field"), human.field, state, {
     selectedUid: ui.selectedAttackerUid,
     attackableUids: attackable,
@@ -302,9 +344,6 @@ function render(root, engine) {
   backs.innerHTML = "";
   for (let i = 0; i < ai.hand.length; i += 1) backs.appendChild(renderCardBack("AI"));
 
-  const extra = root.querySelector("#dd-extra");
-  extra.innerHTML = human.extraPool.map((c) => `<li>${getCard(c.cardId).name} (${getCard(c.cardId).attack})</li>`).join("") || "<li>None remaining</li>";
-
   const log = root.querySelector("#dd-log");
   const logHtml = state.log
     .slice(-40)
@@ -324,19 +363,13 @@ function render(root, engine) {
   advance.disabled = !canAdvance || ui.busy || state.activePlayer !== PLAYER.HUMAN;
   advance.textContent = state.phase === PHASE.MAIN ? "Enter Battle" : "End Turn";
 
-  const hint = root.querySelector("#dd-hint");
-  hint.textContent = hintText(state, legal);
-
-  const canDirect = legal.some((a) => a.type === ACTION.ATTACK && a.targetUid === "DIRECT");
-  const showDirect = Boolean(canDirect && ui.selectedAttackerUid);
-  root.querySelector("#dd-direct").hidden = !showDirect;
-  root.querySelector("#dd-direct").classList.toggle("is-ready", showDirect);
-  const dockDirect = root.querySelector("#dd-direct-dock");
-  if (dockDirect) {
-    dockDirect.hidden = !showDirect;
+  const cancel = root.querySelector("#dd-cancel");
+  if (cancel) {
+    cancel.hidden = !ui.targeting && !ui.selectedAttackerUid && !ui.selectedHandUid;
   }
 
   renderModal(root, state);
+  renderZoneModal(root, state);
   renderResult(root, state);
 
   root.dataset.phase = state.phase;
@@ -384,7 +417,7 @@ function paintInspect(root, state) {
     <div class="dd-inspect__art">${cardArtSvg(def)}</div>
     <h3>${def.name}</h3>
     <p class="dd-inspect__sub">${def.subtitle}</p>
-    <p>${def.description}</p>
+    <p class="dd-inspect__desc">${def.description}</p>
     ${def.type === "monster" ? `<p class="dd-inspect__atk">ATK ${atk}</p>` : ""}
     <p class="dd-inspect__tags">${(def.tags || []).join(" · ")}</p>
   `;
@@ -401,20 +434,113 @@ function syncSidebarTabs(root) {
   });
 }
 
-function hintText(state, legal) {
-  if (state.winner) return "Duel complete.";
-  if (ui.targeting) {
-    const left = ui.targeting.def.targeting.count - ui.targeting.targets.length;
-    return `${ui.targeting.def.name}: select ${left} target${left === 1 ? "" : "s"}.`;
+function extraLocation(player, cardId) {
+  if (player.extraPool.some((card) => card.cardId === cardId)) return "available";
+  if (player.field.some((card) => card.cardId === cardId)) return "field";
+  if (player.graveyard.some((card) => card.cardId === cardId)) return "grave";
+  return "used";
+}
+
+function extraLocationLabel(location) {
+  if (location === "available") return "In Extra Pool";
+  if (location === "field") return "On the field";
+  if (location === "grave") return "In graveyard";
+  return "Already compiled";
+}
+
+function extraSummonHint(cardId) {
+  const recipe = FUSION_RECIPES.find((entry) => entry.result === cardId);
+  if (!recipe) return "No Git Merge recipe exists for this frame.";
+  const names = recipe.materials.map((id) => getCard(id).name);
+  return `Summon with Git Merge in Main Phase: send ${names[0]} and ${names[1]} you control to the graveyard. Does not use your one summon. Git Conflict can cancel the merge.`;
+}
+
+function renderExtraColumn(player, title) {
+  const remaining = player.extraPool.length;
+  const items = EXTRA_POOL.map((def) => {
+    const location = extraLocation(player, def.id);
+    return `
+      <article class="dd-zone-item${location === "available" ? "" : " is-used"}">
+        <div class="dd-zone-item__art">${cardArtSvg(def)}</div>
+        <div>
+          <p class="dd-zone-item__kicker">${extraLocationLabel(location)}</p>
+          <h4>${def.name}</h4>
+          <p class="dd-zone-item__sub">${def.subtitle}</p>
+          <p>${def.description}</p>
+          <p class="dd-zone-item__atk">ATK ${def.attack}</p>
+          <p class="dd-zone-item__summon">${extraSummonHint(def.id)}</p>
+        </div>
+      </article>
+    `;
+  }).join("");
+  return `
+    <section class="dd-zone-col">
+      <h3>${title} · ${remaining} remaining</h3>
+      ${items}
+    </section>
+  `;
+}
+
+function renderGraveColumn(player, title) {
+  const items = player.graveyard.length
+    ? player.graveyard
+        .map((card) => {
+          const def = getCard(card.cardId);
+          const atk = def.type === "monster" ? `<p class="dd-zone-item__atk">ATK ${def.attack}</p>` : "";
+          return `
+            <article class="dd-zone-item">
+              <div class="dd-zone-item__art">${cardArtSvg(def)}</div>
+              <div>
+                <p class="dd-zone-item__kicker">${def.type}</p>
+                <h4>${def.name}</h4>
+                <p class="dd-zone-item__sub">${def.subtitle}</p>
+                <p>${def.description}</p>
+                ${atk}
+              </div>
+            </article>
+          `;
+        })
+        .join("")
+    : `<p class="dd-zone-empty">Graveyard is empty.</p>`;
+  return `
+    <section class="dd-zone-col">
+      <h3>${title} · ${player.graveyard.length}</h3>
+      ${items}
+    </section>
+  `;
+}
+
+function renderZoneModal(root, state) {
+  const overlay = root.querySelector("#dd-zone");
+  if (!overlay) return;
+  overlay.hidden = !ui.zoneModal;
+  if (!ui.zoneModal) return;
+
+  const human = state.players[PLAYER.HUMAN];
+  const ai = state.players[PLAYER.AI];
+  const title = overlay.querySelector("#dd-zone-title");
+  const body = overlay.querySelector("#dd-zone-body");
+
+  if (ui.zoneModal === "extra") {
+    title.textContent = "Extra Pool";
+    body.innerHTML = `
+      <p class="dd-zone-lead">Each Extra Pool frame can be compiled once per player with Git Merge.</p>
+      <div class="dd-zone-grid">
+        ${renderExtraColumn(human, "You")}
+        ${renderExtraColumn(ai, "AI")}
+      </div>
+    `;
+    return;
   }
-  if (state.pending && state.pending.responderId === PLAYER.HUMAN) return "A merge is pending. Conflict or allow it.";
-  if (state.activePlayer !== PLAYER.HUMAN) return "AI is resolving its protocol.";
-  if (state.phase === PHASE.MAIN) return "Summon one machine, play any valid traps, then enter battle.";
-  if (state.phase === PHASE.BATTLE) {
-    if (ui.selectedAttackerUid) return "Choose an opposing frame, or strike directly if the lane is open.";
-    return legal.some((a) => a.type === ACTION.ATTACK) ? "Select one of your frames to attack." : "No remaining attacks. End the turn.";
-  }
-  return "";
+
+  title.textContent = "Graveyard";
+  body.innerHTML = `
+    <p class="dd-zone-lead">Destroyed frames, spent traps, and merge materials rest here.</p>
+    <div class="dd-zone-grid">
+      ${renderGraveColumn(human, "You")}
+      ${renderGraveColumn(ai, "AI")}
+    </div>
+  `;
 }
 
 function renderModal(root, state) {
@@ -490,15 +616,13 @@ function shellHtml() {
           <section class="dd-row dd-row--ai">
             <div class="dd-hp">
               <span>AI</span>
+              <p id="dd-ai-status" class="dd-ai-status" hidden></p>
               <strong id="dd-ai-hp">8000</strong>
               <div class="dd-hp__track"><i id="dd-ai-hp-bar"></i></div>
               <small id="dd-ai-meta"></small>
               <div id="dd-ai-hand" class="dd-ai-hand"></div>
             </div>
             <div id="dd-ai-field" class="dd-field"></div>
-          </section>
-          <section class="dd-lane">
-            <button id="dd-direct" class="dd-direct" type="button" hidden>Direct strike</button>
           </section>
           <section class="dd-row">
             <div id="dd-player-field" class="dd-field"></div>
@@ -510,13 +634,11 @@ function shellHtml() {
             </div>
           </section>
           <section class="dd-dock">
-            <p id="dd-hint" class="dd-hint"></p>
-            <p id="dd-status" class="dd-status"></p>
+            <p id="dd-status" class="dd-status" hidden></p>
             <div id="dd-hand" class="dd-hand"></div>
             <div class="dd-dock__actions">
               <button id="dd-advance" class="dd-btn dd-btn--primary" data-act="advance" type="button">Enter Battle</button>
-              <button id="dd-direct-dock" class="dd-btn dd-btn--danger" data-act="direct" type="button" hidden>Direct Strike</button>
-              <button class="dd-btn" data-act="cancel" type="button">Cancel</button>
+              <button id="dd-cancel" class="dd-btn" data-act="cancel" type="button" hidden>Cancel</button>
             </div>
           </section>
         </div>
@@ -530,9 +652,9 @@ function shellHtml() {
               <h3>Hovered card</h3>
               <div id="dd-inspect" class="dd-inspect"></div>
             </section>
-            <section>
-              <h3>Extra Pool</h3>
-              <ul id="dd-extra" class="dd-extra"></ul>
+            <section class="dd-zone-actions">
+              <button class="dd-btn" data-act="open-extra" type="button">Extra Pool</button>
+              <button class="dd-btn" data-act="open-grave" type="button">Graveyard</button>
             </section>
             <section>
               <h3>Feed</h3>
@@ -543,6 +665,15 @@ function shellHtml() {
             <div id="dd-ai-debug" class="dd-debug"></div>
           </div>
         </aside>
+      </div>
+    </div>
+    <div id="dd-zone" class="dd-overlay dd-overlay--zone" hidden>
+      <div class="dd-overlay__card dd-overlay__card--wide">
+        <div class="dd-zone__head">
+          <h2 id="dd-zone-title">Zone</h2>
+          <button class="dd-btn" data-act="close-zone" type="button">Close</button>
+        </div>
+        <div id="dd-zone-body"></div>
       </div>
     </div>
     <div id="dd-modal" class="dd-overlay" hidden>
