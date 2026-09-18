@@ -1,0 +1,191 @@
+import { EFFECT, DURATION } from "../engine/config.js";
+
+/**
+ * Trap cards — software/engineering concepts that manipulate the match.
+ * Effects are data. The engine interprets types; UI does not.
+ */
+export const TRAPS = [
+  {
+    id: "git-merge",
+    name: "Git Merge",
+    type: "trap",
+    tags: ["fusion", "combo"],
+    subtitle: "Combine compatible frames",
+    description:
+      "Send two compatible machines you control to the graveyard and summon their fusion frame from the Extra Pool. Can be cancelled by Git Conflict.",
+    art: { hue: 145, motif: "merge" },
+    counterable: true,
+    effects: [{ type: EFFECT.FUSION }],
+    targeting: { count: 2, from: "OWN_FIELD", filter: "FUSION_PAIR" },
+  },
+  {
+    id: "git-conflict",
+    name: "Git Conflict",
+    type: "trap",
+    tags: ["counter", "cancel"],
+    subtitle: "Reject a merge",
+    description: "Play only as a response to Git Merge. The merge fails. Materials remain on the field.",
+    art: { hue: 8, motif: "conflict" },
+    timing: "RESPONSE",
+    responseTo: "FUSION",
+    effects: [{ type: EFFECT.CANCEL_ACTION, responseTo: "FUSION" }],
+    targeting: { count: 0 },
+  },
+  {
+    id: "git-cherry-pick",
+    name: "Git Cherry-pick",
+    type: "trap",
+    tags: ["control", "temporary"],
+    subtitle: "Borrow one enemy frame",
+    description: "Take control of one opponent machine until the end of your turn. It can attack this turn.",
+    art: { hue: 48, motif: "cherry" },
+    effects: [
+      {
+        type: EFFECT.TEMPORARY_CONTROL,
+        duration: DURATION.END_OF_TURN,
+      },
+    ],
+    targeting: { count: 1, from: "OPPONENT_FIELD" },
+  },
+  {
+    id: "rate-limiter",
+    name: "Rate Limiter",
+    type: "trap",
+    tags: ["restriction", "defense"],
+    subtitle: "Cap incoming attacks",
+    description: "The opponent may perform only one machine attack during their next turn.",
+    art: { hue: 28, motif: "limit" },
+    effects: [
+      {
+        type: EFFECT.LIMIT_ATTACKS,
+        target: "OPPONENT",
+        value: 1,
+        duration: DURATION.UNTIL_OPPONENT_END,
+      },
+    ],
+    targeting: { count: 0 },
+  },
+  {
+    id: "firewall",
+    name: "Firewall",
+    type: "trap",
+    tags: ["restriction", "defense"],
+    subtitle: "Block direct strikes",
+    description: "The opponent cannot attack you directly during their next turn.",
+    art: { hue: 200, motif: "firewall" },
+    effects: [
+      {
+        type: EFFECT.PREVENT_DIRECT_ATTACKS,
+        target: "OPPONENT",
+        duration: DURATION.UNTIL_OPPONENT_END,
+      },
+    ],
+    targeting: { count: 0 },
+  },
+  {
+    id: "deadlock",
+    name: "Deadlock",
+    type: "trap",
+    tags: ["restriction", "defense"],
+    subtitle: "Freeze one frame",
+    description: "Target opponent machine cannot attack during their next turn.",
+    art: { hue: 320, motif: "deadlock" },
+    effects: [
+      {
+        type: EFFECT.PREVENT_ATTACK,
+        duration: DURATION.UNTIL_OPPONENT_END,
+      },
+    ],
+    targeting: { count: 1, from: "OPPONENT_FIELD" },
+  },
+  {
+    id: "circuit-breaker",
+    name: "Circuit Breaker",
+    type: "trap",
+    tags: ["removal"],
+    subtitle: "Trip a live circuit",
+    description: "Destroy one opponent machine.",
+    art: { hue: 18, motif: "breaker" },
+    effects: [{ type: EFFECT.DESTROY_MONSTER }],
+    targeting: { count: 1, from: "OPPONENT_FIELD" },
+  },
+  {
+    id: "observer",
+    name: "Observer",
+    type: "trap",
+    tags: ["buff", "atk"],
+    subtitle: "Watch and adapt",
+    description: "Target machine you control gains +1000 ATK until the end of this turn.",
+    art: { hue: 260, motif: "observer" },
+    effects: [
+      {
+        type: EFFECT.MODIFY_ATK,
+        value: 1000,
+        duration: DURATION.END_OF_TURN,
+      },
+    ],
+    targeting: { count: 1, from: "OWN_FIELD" },
+  },
+  {
+    id: "bug-injection",
+    name: "Bug Injection",
+    type: "trap",
+    tags: ["debuff", "atk"],
+    subtitle: "Corrupt a target",
+    description: "Target opponent machine loses 1000 ATK until the end of this turn.",
+    art: { hue: 95, motif: "bug" },
+    effects: [
+      {
+        type: EFFECT.MODIFY_ATK,
+        value: -1000,
+        duration: DURATION.END_OF_TURN,
+      },
+    ],
+    targeting: { count: 1, from: "OPPONENT_FIELD" },
+  },
+  {
+    id: "rollback",
+    name: "Rollback",
+    type: "trap",
+    tags: ["heal"],
+    subtitle: "Restore integrity",
+    description: "Gain 1500 HP, up to your starting value.",
+    art: { hue: 168, motif: "rollback" },
+    effects: [
+      {
+        type: EFFECT.MODIFY_HP,
+        target: "SELF",
+        value: 1500,
+      },
+    ],
+    targeting: { count: 0 },
+  },
+  {
+    id: "hotfix",
+    name: "Hotfix",
+    type: "trap",
+    tags: ["heal"],
+    subtitle: "Emergency patch",
+    description: "Gain 1200 HP, up to your starting value.",
+    art: { hue: 55, motif: "hotfix" },
+    effects: [
+      {
+        type: EFFECT.MODIFY_HP,
+        target: "SELF",
+        value: 1200,
+      },
+    ],
+    targeting: { count: 0 },
+  },
+  {
+    id: "factory",
+    name: "Factory",
+    type: "trap",
+    tags: ["draw"],
+    subtitle: "Spin up another unit",
+    description: "Draw 1 card.",
+    art: { hue: 210, motif: "factory" },
+    effects: [{ type: EFFECT.DRAW_CARDS, value: 1 }],
+    targeting: { count: 0 },
+  },
+];

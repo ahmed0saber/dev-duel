@@ -1,0 +1,11 @@
+{
+  "name": "dev-duel",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Local Human vs AI card-battle prototype",
+  "scripts": {
+    "test": "node tests/run.js",
+    "start": "npx --yes serve ."
+  }
+}
