@@ -10,13 +10,3 @@ export function simulateAction(state, action) {
   const result = applyAction(next, action);
   return { state: next, result };
 }
-
-export function simulateActions(state, actions) {
-  let current = cloneState(state);
-  current.simulation = true;
-  for (const action of actions) {
-    const result = applyAction(current, action);
-    if (!result.ok) return { state: current, result, failed: true };
-  }
-  return { state: current, result: { ok: true }, failed: false };
-}

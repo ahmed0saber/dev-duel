@@ -1,4 +1,3 @@
-import { PLAYER } from "../engine/config.js";
 import { formatScore } from "./animations.js";
 
 function partRow(name, value) {
