@@ -32,12 +32,13 @@ export function chooseAction(state, playerId, options = {}) {
       score: round(evaluation.total),
       delta: round(evaluation.total - baseline.total),
       evaluation,
+      winner: simulated.state.winner,
     };
   });
 
-  const valid = candidates
-    .filter((entry) => Number.isFinite(entry.score))
-    .sort((a, b) => b.score - a.score);
+  const finite = candidates.filter((entry) => Number.isFinite(entry.score));
+  const winning = finite.filter((entry) => entry.winner === playerId);
+  const valid = (winning.length ? winning : finite).sort((a, b) => b.score - a.score);
 
   const bestScore = valid[0]?.score ?? Number.NEGATIVE_INFINITY;
   const ties = valid.filter((entry) => Math.abs(entry.score - bestScore) <= epsilon);

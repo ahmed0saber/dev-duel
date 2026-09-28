@@ -112,6 +112,26 @@ export function runAiTests() {
     assertEqual(decision.action.targetUid, "DIRECT");
   });
 
+  test("AI takes a lethal direct attack instead of ending the turn", () => {
+    const state = freshState({ phase: PHASE.BATTLE, activePlayer: PLAYER.AI });
+    addToField(state, PLAYER.AI, "vx-09");
+    state.players[PLAYER.HUMAN].hp = 1000;
+    const decision = chooseAction(state, PLAYER.AI);
+    assertEqual(decision.action.type, ACTION.ATTACK);
+    assertEqual(decision.action.targetUid, "DIRECT");
+  });
+
+  test("AI crashes through a weaker defender when that attack ends the duel", () => {
+    const state = freshState({ phase: PHASE.BATTLE, activePlayer: PLAYER.AI });
+    addToField(state, PLAYER.AI, "titan-03");
+    addToField(state, PLAYER.HUMAN, "drone-21");
+    addToField(state, PLAYER.HUMAN, "titan-03");
+    state.players[PLAYER.HUMAN].hp = 800;
+    const decision = chooseAction(state, PLAYER.AI);
+    assertEqual(decision.action.type, ACTION.ATTACK);
+    assertEqual(decision.action.targetCardId, "drone-21");
+  });
+
   test("AI decision stays well under 500ms on a typical board", () => {
     const state = freshState({ phase: PHASE.MAIN, activePlayer: PLAYER.AI });
     addToHand(state, PLAYER.AI, "titan-03");

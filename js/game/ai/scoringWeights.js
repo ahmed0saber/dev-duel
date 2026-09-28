@@ -8,6 +8,7 @@ export const WEIGHTS = {
   damagePotential: 0.55,
   incomingThreat: 0.5,
   lethal: 4000,
+  win: 20000,
   survivePenalty: 3200,
   handMonster: 0.12,
   handTrapPlayable: 28,

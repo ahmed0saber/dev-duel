@@ -136,6 +136,28 @@ export function evaluateGameState(state, perspectiveId, weights = WEIGHTS) {
   const myAtk = sum(myField.map((m) => attackValue(state, m)));
   const oppAtk = sum(oppField.map((m) => attackValue(state, m)));
 
+  if (state.winner === perspectiveId) {
+    return {
+      total: weights.win + me.hp * weights.hp,
+      parts: { win: weights.win, leftoverHp: me.hp * weights.hp },
+      outgoing: 0,
+      incoming: 0,
+      myAtk,
+      oppAtk,
+    };
+  }
+
+  if (state.winner && state.winner !== "draw") {
+    return {
+      total: -weights.win,
+      parts: { win: -weights.win },
+      outgoing: 0,
+      incoming: 0,
+      myAtk,
+      oppAtk,
+    };
+  }
+
   const outgoing = estimateBattleDamage(state, perspectiveId);
   const incoming = estimateBattleDamage(state, opponentId(perspectiveId));
 
@@ -144,7 +166,7 @@ export function evaluateGameState(state, perspectiveId, weights = WEIGHTS) {
     (myAtk - oppAtk) * weights.boardAtk + (myField.length - oppField.length) * weights.boardCount;
   const damagePotential = outgoing * weights.damagePotential;
   const threatResponse = -incoming * weights.incomingThreat;
-  const lethal = outgoing >= opp.hp && opp.hp > 0 ? weights.lethal : 0;
+  const lethal = !state.winner && outgoing >= opp.hp && opp.hp > 0 ? weights.lethal : 0;
   const survive = incoming >= me.hp && me.hp > 0 ? -weights.survivePenalty : 0;
   const hand = handQuality(state, perspectiveId);
   const fusion = fusionPotential(state, perspectiveId);
