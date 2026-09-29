@@ -85,6 +85,7 @@ function handleCommand(root, engine, action) {
   if (action === "direct") tryDirect(engine);
   if (action === "cancel") {
     resetSelection();
+    setStatus(root, "");
     render(root, engine);
   }
   if (action === "open-extra") {
@@ -238,6 +239,7 @@ async function dispatchPlayer(root, engine, action) {
     setStatus(root, result.reason);
     return;
   }
+  setStatus(root, "");
   resetSelection();
   render(root, engine);
   await maybeRunAi(root, engine);

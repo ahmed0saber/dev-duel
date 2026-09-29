@@ -3,7 +3,7 @@ import { ACTION, PHASE, PLAYER } from "../js/game/engine/config.js";
 import { applyAction } from "../js/game/engine/actions.js";
 import { startDuel } from "../js/game/engine/turnManager.js";
 import { createInitialState } from "../js/game/engine/gameState.js";
-import { canNormalSummon } from "../js/game/engine/gameRules.js";
+import { canNormalSummon, preventsDirectAttacks } from "../js/game/engine/gameRules.js";
 import { chooseDrawIndex, handHasViablePlay } from "../js/game/ai/drawStrategy.js";
 import { freshState, addToHand, addToField, addToDeck } from "./helpers.js";
 
@@ -100,6 +100,22 @@ export function runRulesTests() {
     const trap = addToHand(state, PLAYER.HUMAN, "rollback");
     applyAction(state, { type: ACTION.ACTIVATE_TRAP, cardUid: trap.uid, targets: [] });
     assertEqual(state.players[PLAYER.HUMAN].hp, 6500);
+  });
+
+  test("Firewall expires after the opponent's turn ends", () => {
+    const state = freshState({ phase: PHASE.MAIN, activePlayer: PLAYER.HUMAN, turnNumber: 1 });
+    const trap = addToHand(state, PLAYER.HUMAN, "firewall");
+    applyAction(state, { type: ACTION.ACTIVATE_TRAP, cardUid: trap.uid, targets: [] });
+    assert(preventsDirectAttacks(state, PLAYER.AI), "Firewall should block the opponent immediately");
+    applyAction(state, { type: ACTION.ADVANCE_PHASE });
+    applyAction(state, { type: ACTION.ADVANCE_PHASE });
+    assertEqual(state.activePlayer, PLAYER.AI);
+    assert(preventsDirectAttacks(state, PLAYER.AI), "Firewall should last through the opponent's turn");
+    applyAction(state, { type: ACTION.ADVANCE_PHASE, playerId: PLAYER.AI });
+    applyAction(state, { type: ACTION.ADVANCE_PHASE, playerId: PLAYER.AI });
+    assertEqual(state.activePlayer, PLAYER.HUMAN);
+    assertEqual(preventsDirectAttacks(state, PLAYER.AI), false);
+    assertEqual(preventsDirectAttacks(state, PLAYER.HUMAN), false);
   });
 
   test("Rate Limiter restricts the opponent to one attack next turn", () => {

@@ -21,7 +21,6 @@ import {
   applyTrapEffects,
   cancelPendingFusion,
   destroyMonster,
-  sendToGraveyard,
 } from "./effects.js";
 import { advancePhase } from "./turnManager.js";
 import { drawCards } from "./draw.js";

@@ -8,9 +8,8 @@ import {
   pushLog,
   checkWinner,
 } from "./gameState.js";
-import { fieldOfController } from "./gameRules.js";
 
-export function expiryFor(state, duration, sourcePlayerId) {
+function expiryFor(state, duration) {
   if (duration === DURATION.END_OF_TURN) {
     return { turnNumber: state.turnNumber, phase: "end" };
   }
@@ -43,7 +42,7 @@ export function expireEffects(state) {
   state.effects = remaining;
 }
 
-export function moveMonsterControl(state, monster, newController) {
+function moveMonsterControl(state, monster, newController) {
   if (monster.controller === newController) return;
   const from = playerOf(state, monster.controller);
   const to = playerOf(state, newController);
@@ -56,7 +55,7 @@ export function moveMonsterControl(state, monster, newController) {
   to.field.push(monster);
 }
 
-export function sendToGraveyard(state, monsterOrCard) {
+function sendToGraveyard(state, monsterOrCard) {
   const located = findOnField(state, monsterOrCard.uid);
   if (located) {
     located.player.field = located.player.field.filter((m) => m.uid !== monsterOrCard.uid);
@@ -95,7 +94,7 @@ export function applyTrapEffects(state, playerId, card, targets) {
         sourcePlayerId: playerId,
         monsterUid: monster.uid,
         value: effect.value,
-        expires: expiryFor(state, effect.duration, playerId),
+        expires: expiryFor(state, effect.duration),
       });
       const sign = effect.value > 0 ? "+" : "";
       pushLog(state, `${def.name}: ${getCard(monster.cardId).name} ${sign}${effect.value} ATK.`);
@@ -123,7 +122,7 @@ export function applyTrapEffects(state, playerId, card, targets) {
         sourcePlayerId: playerId,
         targetPlayerId: targetId,
         value: effect.value,
-        expires: expiryFor(state, effect.duration, playerId),
+        expires: expiryFor(state, effect.duration),
       });
       pushLog(state, `${def.name}: opponent limited to ${effect.value} attack(s).`);
       events.push({ type: "LIMIT_ATTACKS", targetPlayerId: targetId, value: effect.value });
@@ -136,7 +135,7 @@ export function applyTrapEffects(state, playerId, card, targets) {
         sourceCardId: def.id,
         sourcePlayerId: playerId,
         targetPlayerId: targetId,
-        expires: expiryFor(state, effect.duration, playerId),
+        expires: expiryFor(state, effect.duration),
       });
       pushLog(state, `${def.name}: direct attacks blocked.`);
       events.push({ type: "PREVENT_DIRECT" });
@@ -149,7 +148,7 @@ export function applyTrapEffects(state, playerId, card, targets) {
         sourceCardId: def.id,
         sourcePlayerId: playerId,
         monsterUid: monster.uid,
-        expires: expiryFor(state, effect.duration, playerId),
+        expires: expiryFor(state, effect.duration),
       });
       pushLog(state, `${def.name}: ${getCard(monster.cardId).name} cannot attack.`);
       events.push({ type: "PREVENT_ATTACK", monsterUid: monster.uid });
@@ -164,7 +163,7 @@ export function applyTrapEffects(state, playerId, card, targets) {
         sourcePlayerId: playerId,
         monsterUid: monster.uid,
         originalOwner,
-        expires: expiryFor(state, effect.duration, playerId),
+        expires: expiryFor(state, effect.duration),
       });
       moveMonsterControl(state, monster, playerId);
       monster.attacksThisTurn = 0;
@@ -185,7 +184,7 @@ export function applyTrapEffects(state, playerId, card, targets) {
   return events;
 }
 
-export function performFusion(state, playerId, materials) {
+function performFusion(state, playerId, materials) {
   const recipe = findFusionRecipe(materials[0].cardId, materials[1].cardId);
   const player = playerOf(state, playerId);
   const extraIndex = player.extraPool.findIndex((c) => c.cardId === recipe.result);
@@ -209,8 +208,4 @@ export function cancelPendingFusion(state) {
   if (!pending) return;
   pushLog(state, "Git Conflict: merge aborted. Materials remain.");
   state.pending = null;
-}
-
-export function fieldHasController(state, playerId) {
-  return fieldOfController(state, playerId).length > 0;
 }
