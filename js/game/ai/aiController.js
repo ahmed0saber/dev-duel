@@ -60,22 +60,32 @@ export function chooseAction(state, playerId, options = {}) {
   };
 }
 
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function isActor(state, playerId) {
+  if (state.winner) return false;
+  const actor = state.pending ? state.pending.responderId : state.activePlayer;
+  return actor === playerId;
+}
+
 export async function runAiBurst(engine, playerId = "ai", delayMs = 380) {
   const steps = [];
   for (let i = 0; i < 16; i += 1) {
     const state = engine.getState();
-    if (state.winner) break;
-    const actor = state.pending ? state.pending.responderId : state.activePlayer;
-    if (actor !== playerId) break;
+    if (!isActor(state, playerId)) break;
 
     const decision = chooseAction(state, playerId);
     engine.setLastDecision(decision);
     steps.push(decision);
-    if (delayMs > 0) {
-      await new Promise((resolve) => setTimeout(resolve, delayMs));
-    }
+
     const result = engine.dispatch(decision.action);
     if (!result.ok) break;
+
+    if (delayMs > 0 && isActor(engine.getState(), playerId)) {
+      await sleep(delayMs);
+    }
   }
   return steps;
 }

@@ -13,7 +13,7 @@ export const CONFIG = {
   maxAttacksPerMonster: 1,
   maxNormalSummonsPerTurn: 1,
   tieScoreEpsilon: 1.5,
-  aiActionDelayMs: 380,
+  aiActionDelayMs: 1000,
   phaseDelayMs: 280,
 
   draw: {
