@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DEV DUEL — Motion Graphic</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;800&family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="viewport">
+      <div id="stage">
+        <!-- ============ BACKGROUND ============ -->
+        <div id="bg">
+          <div id="grid"></div>
+          <div id="glow-a" class="glow"></div>
+          <div id="glow-b" class="glow"></div>
+          <div class="scanlines"></div>
+          <div class="vignette"></div>
+        </div>
+
+        <!-- ============ S1 INTRO 0 - 18.5 ============ -->
+        <section id="s-intro" class="scene">
+          <h1 id="intro-title" class="mega">DEV DUEL</h1>
+          <div id="intro-card-l" class="abs"><div data-card="titan-03" class="w-lg tilt-l"></div></div>
+          <div id="intro-vs" class="abs vs">VS</div>
+          <div id="intro-card-r" class="abs"><div data-card="circuit-breaker" class="w-lg tilt-r"></div></div>
+
+          <div id="tag-ahmed" class="abs name-tag">
+            <span class="name-tag__label">NARRATOR</span>
+            <span class="name-tag__name">Ahmed Saber</span>
+            <span id="tag-strike" class="strike"></span>
+          </div>
+
+          <div id="bot-main" class="abs bot-wrap">
+            <div class="bot">
+              <div class="bot-antenna"></div>
+              <div class="bot-head"><div class="bot-visor"><span class="eye"></span><span class="eye"></span></div></div>
+              <div class="bot-body"><div class="bot-core"></div></div>
+            </div>
+            <div class="bot-label">AI BOT</div>
+          </div>
+          <div id="bot-bubble" class="abs bubble">Hi! I'm an <b>AI bot</b>.</div>
+
+          <div id="chip-by" class="abs info-chip"><small>GAME BY</small>Ahmed Saber</div>
+          <div id="chip-presented" class="abs info-chip info-chip--cyan"><small>PRESENTED BY</small>AI Bot</div>
+
+          <div id="bot-opp" class="abs bot-wrap">
+            <div class="bot bot--red">
+              <div class="bot-antenna"></div>
+              <div class="bot-head"><div class="bot-visor"><span class="eye"></span><span class="eye"></span></div></div>
+              <div class="bot-body"><div class="bot-core"></div></div>
+            </div>
+            <div class="bot-label bot-label--red">YOUR OPPONENT · AI</div>
+          </div>
+          <div id="family-link" class="abs family-link"><span>SAME FAMILY</span></div>
+
+          <div id="browser" class="abs browser">
+            <div class="browser__bar">
+              <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+              <span class="browser__url">localhost / dev-duel</span>
+            </div>
+            <div class="browser__body">
+              <div id="br-human" class="side-badge side-badge--cyan">HUMAN</div>
+              <div id="br-vs" class="vs">VS</div>
+              <div id="br-ai" class="side-badge side-badge--red">AI</div>
+              <div id="br-caption" class="br-caption">Card Duel · runs in your browser</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ S2 INDEX 18.5 - 28.6 ============ -->
+        <section id="s-index" class="scene">
+          <div id="idx-head" class="abs scene-head">
+            <span class="kicker">INDEX</span>
+            <h2>4 Topics</h2>
+            <p class="ar">هنتكلم في ٤ حاجات</p>
+          </div>
+          <ol id="idx-list" class="abs idx-list">
+            <li id="idx-1"><span class="n">01</span><span class="t">The Inspiration</span><span class="ar">اللعبة جاية منين</span></li>
+            <li id="idx-2"><span class="n">02</span><span class="t">The Cards</span><span class="ar">الكروت</span></li>
+            <li id="idx-3"><span class="n">03</span><span class="t">Game Rules</span><span class="ar">قواعد اللعب</span></li>
+            <li id="idx-4" class="hot"><span class="n">04</span><span class="t">How the AI Thinks</span><span class="ar">إزاي الـ AI بيفكر</span><span id="idx-4-glow" class="hot-glow"></span></li>
+          </ol>
+          <div id="idx-numbers" class="abs mono-float">
+            <span>score = 455.1</span><span>lethal +4000</span><span>threat −0.5x</span>
+          </div>
+        </section>
+
+        <!-- ============ S3 INSPIRATION 28.8 - 45 ============ -->
+        <section id="s-insp" class="scene">
+          <div id="insp-head" class="abs scene-head">
+            <span class="kicker">INSPIRED BY</span>
+            <h2>Yu-Gi-Oh</h2>
+          </div>
+
+          <div id="insp-left-old" class="abs insp-slot">
+            <div class="classic-card classic-card--monster"><span class="glyph">?</span><span class="lbl">MONSTER</span></div>
+          </div>
+          <div id="insp-left-new" class="abs insp-slot"><div data-card="titan-03" class="w-lg"></div></div>
+          <div id="insp-left-lbl" class="abs slot-label">Monsters <i>→</i> <b>Robots &amp; Machines</b></div>
+
+          <div id="insp-right-old" class="abs insp-slot">
+            <div class="classic-card classic-card--trap"><span class="glyph">!</span><span class="lbl">TRAP</span></div>
+          </div>
+          <div id="insp-right-new" class="abs insp-slot"><div data-card="git-merge" class="w-lg"></div></div>
+          <div id="insp-right-lbl" class="abs slot-label slot-label--trap">Traps <i>→</i> <b>Software Concepts</b></div>
+
+          <div id="insp-i1" class="abs rule-icon"><b>HP</b><span>Life points</span></div>
+          <div id="insp-i2" class="abs rule-icon"><b>▦</b><span>Cards on the field</span></div>
+          <div id="insp-i3" class="abs rule-icon"><b>⚔</b><span>Attack the opponent</span></div>
+
+          <div id="insp-chips" class="abs chip-row">
+            <div id="insp-c1" class="concept"><span class="concept__name">Git Merge</span><span id="insp-m1" class="concept__meaning">fuses 2 machines</span></div>
+            <div id="insp-c2" class="concept"><span class="concept__name">Firewall</span><span id="insp-m2" class="concept__meaning">blocks direct attacks</span></div>
+            <div id="insp-c3" class="concept"><span class="concept__name">Deadlock</span><span id="insp-m3" class="concept__meaning">freezes a machine</span></div>
+          </div>
+        </section>
+
+        <!-- ============ S4 DECK + MACHINES 45 - 66.8 ============ -->
+        <section id="s-deck" class="scene">
+          <div id="deck-main" class="abs deck-stack">
+            <div class="cardback"></div><div class="cardback"></div><div class="cardback"></div><div class="cardback"></div><div class="cardback"></div>
+            <div class="deck-count"><span id="deck-n" class="n">0</span><span class="u">CARDS</span></div>
+          </div>
+          <div id="deck-human" class="abs deck-stack deck-stack--sm">
+            <div class="cardback"></div><div class="cardback"></div><div class="cardback"></div>
+            <div class="deck-count"><span class="n">27</span><span class="u">HUMAN</span></div>
+          </div>
+          <div id="deck-ai" class="abs deck-stack deck-stack--sm deck-stack--red">
+            <div class="cardback"></div><div class="cardback"></div><div class="cardback"></div>
+            <div class="deck-count"><span class="n">27</span><span class="u">AI</span></div>
+          </div>
+          <div id="deck-caption" class="abs caption">Same card list · shuffled differently</div>
+
+          <div id="mach-head" class="abs scene-head scene-head--top">
+            <span class="kicker">THE CARDS</span>
+            <h2>10 Machines</h2>
+          </div>
+          <div id="mach-row" class="abs mach-row">
+            <div id="mc-0" class="mc"><div data-card="drone-21" class="w-sm"></div></div>
+            <div id="mc-1" class="mc"><div data-card="xr-5" class="w-sm"></div></div>
+            <div id="mc-2" class="mc"><div data-card="rx-17" class="w-sm"></div></div>
+            <div id="mc-3" class="mc"><div data-card="aero-12" class="w-sm"></div></div>
+            <div id="mc-4" class="mc"><div data-card="mk-04" class="w-sm"></div></div>
+            <div id="mc-5" class="mc"><div data-card="a-47" class="w-sm"></div></div>
+            <div id="mc-6" class="mc"><div data-card="unit-08" class="w-sm"></div></div>
+            <div id="mc-7" class="mc"><div data-card="vx-09" class="w-sm"></div></div>
+            <div id="mc-8" class="mc"><div data-card="sentinel-09" class="w-sm"></div></div>
+            <div id="mc-9" class="mc"><div data-card="titan-03" class="w-sm"></div></div>
+          </div>
+          <div id="atk-explain" class="abs callout"><b>ATK</b> = attack power · the one number that matters</div>
+          <div id="callout-drone" class="abs callout callout--big"><b>DRONE-21</b> · <span class="num">1200</span> ATK <em>weakest</em></div>
+          <div id="callout-titan" class="abs callout callout--big"><b>TITAN-03</b> · <span class="num">2800</span> ATK <em>strongest</em></div>
+          <div id="atk-range" class="abs atk-range"><span>1200</span><div class="atk-range__bar"><i id="atk-range-fill"></i></div><span>2800</span></div>
+        </section>
+
+        <!-- ============ S5 TRAPS 67 - 85 ============ -->
+        <section id="s-traps" class="scene">
+          <div id="traps-head" class="abs scene-head scene-head--top">
+            <span class="kicker">THE CARDS</span>
+            <h2>12 Traps</h2>
+          </div>
+          <div id="traps-grid" class="abs traps-grid">
+            <div class="tc"><div data-card="git-merge" class="w-sm"></div></div>
+            <div class="tc"><div data-card="git-conflict" class="w-sm"></div></div>
+            <div class="tc"><div data-card="git-cherry-pick" class="w-sm"></div></div>
+            <div class="tc"><div data-card="rate-limiter" class="w-sm"></div></div>
+            <div class="tc"><div data-card="firewall" class="w-sm"></div></div>
+            <div class="tc"><div data-card="deadlock" class="w-sm"></div></div>
+            <div class="tc"><div data-card="circuit-breaker" class="w-sm"></div></div>
+            <div class="tc"><div data-card="observer" class="w-sm"></div></div>
+            <div class="tc"><div data-card="bug-injection" class="w-sm"></div></div>
+            <div class="tc"><div data-card="rollback" class="w-sm"></div></div>
+            <div class="tc"><div data-card="hotfix" class="w-sm"></div></div>
+            <div class="tc"><div data-card="factory" class="w-sm"></div></div>
+          </div>
+
+          <div id="f-firewall" class="abs feature">
+            <div class="feature__card"><div data-card="firewall" class="w-lg"></div></div>
+            <div class="feature__text">
+              <span class="kicker">EXAMPLE TRAP</span>
+              <h3>Firewall</h3>
+              <p>Opponent can't attack you <b>DIRECT</b> during their next turn.</p>
+            </div>
+            <div class="feature__demo">
+              <div class="demo-you">YOU<small>8000 HP</small></div>
+              <div id="fw-arrow" class="demo-arrow">DIRECT ATTACK ➜</div>
+              <div id="fw-wall" class="demo-wall"></div>
+              <div id="fw-stamp" class="stamp stamp--cyan">BLOCKED</div>
+            </div>
+          </div>
+
+          <div id="f-breaker" class="abs feature">
+            <div class="feature__card"><div data-card="circuit-breaker" class="w-lg"></div></div>
+            <div class="feature__text">
+              <span class="kicker">EXAMPLE TRAP</span>
+              <h3>Circuit Breaker</h3>
+              <p>Destroys one of your opponent's machines.</p>
+            </div>
+            <div class="feature__demo">
+              <div id="cb-target" class="demo-target"><div data-card="vx-09" class="w-sm"></div></div>
+              <div id="cb-bolt" class="bolt"></div>
+              <div id="cb-burst" class="burst"></div>
+              <div id="cb-stamp" class="stamp">DESTROYED</div>
+            </div>
+          </div>
+
+          <div id="f-observer" class="abs feature">
+            <div class="feature__card"><div data-card="observer" class="w-lg"></div></div>
+            <div class="feature__text">
+              <span class="kicker">EXAMPLE TRAP</span>
+              <h3>Observer</h3>
+              <p>Your machine gains <b>+1000 ATK</b> until the end of the turn.</p>
+            </div>
+            <div class="feature__demo">
+              <div id="ob-target" class="demo-target"><div data-card="rx-17" class="w-sm"></div></div>
+              <div class="demo-atk"><small>ATK</small><span id="ob-atk">1600</span></div>
+              <div id="ob-plus" class="float-num float-num--ok">+1000</div>
+            </div>
+          </div>
+
+          <div id="f-rollback" class="abs feature">
+            <div class="feature__card"><div data-card="rollback" class="w-lg"></div></div>
+            <div class="feature__text">
+              <span class="kicker">EXAMPLE TRAP</span>
+              <h3>Rollback</h3>
+              <p>Restores <b>1500 HP</b>.</p>
+            </div>
+            <div class="feature__demo">
+              <div class="hp-bar hp-bar--wide">
+                <span class="hp-bar__label">HP</span>
+                <div class="hp-bar__track"><i id="rb-fill" class="hp-bar__fill"></i></div>
+                <span id="rb-hp" class="hp-bar__val">5000</span>
+              </div>
+              <div id="rb-plus" class="float-num float-num--ok">+1500 HP</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ S6 GIT MERGE 85 - 109.8 ============ -->
+        <section id="s-merge" class="scene">
+          <div id="gm-hero" class="abs"><div data-card="git-merge" class="w-xl"></div></div>
+          <div id="gm-label" class="abs caption caption--trap">THE STRONGEST TRAP</div>
+          <div id="gm-explain" class="abs callout">Merges <b>2 compatible machines</b> into <b>1 fusion machine</b></div>
+          <div id="xpool" class="abs xpool">
+            <div class="xpool__title">EXTRA POOL</div>
+            <div class="xpool__row">
+              <div class="xp"><div data-card="ax-7" class="w-sm"></div></div>
+              <div class="xp"><div data-card="nx-00" class="w-sm"></div></div>
+              <div class="xp"><div data-card="px-01" class="w-sm"></div></div>
+              <div class="xp"><div data-card="tx-max" class="w-sm"></div></div>
+            </div>
+          </div>
+
+          <div id="gm-rx" class="abs"><div data-card="rx-17" class="w-lg"></div></div>
+          <div id="gm-plus" class="abs big-op">+</div>
+          <div id="gm-mk" class="abs"><div data-card="mk-04" class="w-lg"></div></div>
+          <div id="gm-flash" class="abs flash"></div>
+          <div id="gm-nx" class="abs"><div data-card="nx-00" data-atk="0" class="w-xl"></div></div>
+          <div id="gm-nx-recipe" class="abs caption">RX-17 + MK-04 = <b>NX-00</b></div>
+
+          <div id="gm-tx" class="abs"><div data-card="tx-max" data-atk="0" class="w-xl"></div></div>
+          <div id="gm-tx-label" class="abs caption caption--fusion">STRONGEST FUSION · TITAN-03 + SENTINEL-09</div>
+
+          <div id="gm-b1" class="abs rule-badge"><span class="rule-badge__icon">⤓</span><span><b>Doesn't use</b> your summon</span></div>
+          <div id="gm-b2" class="abs rule-badge"><span class="rule-badge__icon">1×</span><span>Each fusion: <b>once per duel</b></span></div>
+        </section>
+
+        <!-- ============ S7 GIT CONFLICT 110 - 121.8 ============ -->
+        <section id="s-conflict" class="scene">
+          <div id="gc-merge" class="abs"><div data-card="git-merge" class="w-md"></div></div>
+          <div id="gc-arrow" class="abs merge-arrow"><span>MERGING…</span></div>
+          <div id="gc-ghost" class="abs ghost"><div data-card="px-01" class="w-md"></div></div>
+          <div id="gc-conflict" class="abs"><div data-card="git-conflict" class="w-md"></div></div>
+          <div id="gc-stamp" class="abs stamp stamp--big">MERGE REJECTED</div>
+          <div id="gc-note" class="abs caption">Materials stay on the field</div>
+
+          <div id="gc-head" class="abs callout callout--big">AI merges &amp; you hold <b class="trap">Git Conflict</b></div>
+          <div id="gc-modal" class="abs modal">
+            <h4>Merge pending</h4>
+            <p>AI is compiling UNIT-08 + VX-09.</p>
+            <p class="muted">Git Conflict is in your hand.</p>
+            <div class="modal__btns">
+              <span id="gc-btn-conflict" class="btn btn--danger">Git Conflict</span>
+              <span id="gc-btn-allow" class="btn">Allow merge</span>
+            </div>
+          </div>
+          <div id="gc-cursor" class="abs cursor"></div>
+        </section>
+
+        <!-- ============ S8 RULES 122 - 137.8 ============ -->
+        <section id="s-rules" class="scene">
+          <div id="r-hp-h" class="abs hp-bar">
+            <span class="hp-bar__label">HUMAN</span>
+            <div class="hp-bar__track"><i id="r-fill-h" class="hp-bar__fill"></i></div>
+            <span id="r-hp-h-v" class="hp-bar__val">0</span>
+          </div>
+          <div id="r-hp-a" class="abs hp-bar hp-bar--red">
+            <span class="hp-bar__label">AI</span>
+            <div class="hp-bar__track"><i id="r-fill-a" class="hp-bar__fill"></i></div>
+            <span id="r-hp-a-v" class="hp-bar__val">0</span>
+          </div>
+          <div id="r-hand-h" class="abs hand">
+            <div class="cardback"></div><div class="cardback"></div><div class="cardback"></div><div class="cardback"></div><div class="cardback"></div>
+          </div>
+          <div id="r-hand-a" class="abs hand hand--red">
+            <div class="cardback"></div><div class="cardback"></div><div class="cardback"></div><div class="cardback"></div><div class="cardback"></div>
+          </div>
+          <div id="r-hand-lbl" class="abs caption">5 cards in hand</div>
+          <div id="r-draw" class="abs rule-badge rule-badge--sm"><span class="rule-badge__icon">+1</span><span>Draw <b>1 card</b> every turn</span></div>
+
+          <div id="r-phases" class="abs phases">
+            <span class="ph">DRAW</span><i>›</i><span id="r-ph-main" class="ph">MAIN</span><i>›</i><span class="ph">BATTLE</span><i>›</i><span class="ph">END</span>
+          </div>
+
+          <div id="r-t1" class="abs tile"><div class="tile__icon">1×</div><h5>1 Summon</h5><p>per turn in the Main Phase</p></div>
+          <div id="r-t2" class="abs tile"><div class="tile__icon tile__icon--trap">⚡</div><h5>Traps: instant</h5><p>played straight from your hand</p></div>
+          <div id="r-t3" class="abs tile"><div class="tile__icon"><span class="facedown"></span><span class="x">✕</span></div><h5>No face-down</h5><p>unlike Yu-Gi-Oh</p></div>
+          <div id="r-t4" class="abs tile tile--trap"><div class="tile__icon tile__icon--trap">↺</div><h5>Git Conflict</h5><p>the exception · reaction only</p></div>
+        </section>
+
+        <!-- ============ S9 COMBAT 138 - 160.9 ============ -->
+        <section id="s-combat" class="scene">
+          <div id="cb-phases" class="abs phases phases--top">
+            <span class="ph">DRAW</span><i>›</i><span class="ph">MAIN</span><i>›</i><span id="cb-ph-battle" class="ph">BATTLE</span><i>›</i><span class="ph">END</span>
+          </div>
+          <div id="cb-once" class="abs callout">Each machine attacks <b>once</b> per turn</div>
+          <div id="cb-vs" class="abs mega mega--mid">ATK <i>vs</i> ATK</div>
+
+          <div id="clip1" class="abs clip">
+            <div class="clip__cap">Higher ATK wins · owner takes the <b>difference</b></div>
+            <div id="c1-a" class="clip__l"><div data-card="unit-08" class="w-md"></div></div>
+            <div id="c1-d" class="clip__r"><div data-card="rx-17" class="w-md"></div></div>
+            <div id="c1-burst" class="burst clip__burst-r"></div>
+            <div id="c1-dmg" class="float-num clip__num-r">−500</div>
+          </div>
+
+          <div id="clip2" class="abs clip">
+            <div class="clip__cap">Lower ATK · your machine is destroyed + <b>recoil</b></div>
+            <div id="c2-a" class="clip__l"><div data-card="rx-17" class="w-md"></div></div>
+            <div id="c2-d" class="clip__r"><div data-card="unit-08" class="w-md"></div></div>
+            <div id="c2-burst" class="burst clip__burst-l"></div>
+            <div id="c2-dmg" class="float-num clip__num-l">−500 RECOIL</div>
+          </div>
+
+          <div id="clip3" class="abs clip">
+            <div class="clip__cap">Equal ATK · <b>both</b> destroyed</div>
+            <div id="c3-a" class="clip__l"><div data-card="mk-04" class="w-md"></div></div>
+            <div id="c3-d" class="clip__r"><div data-card="mk-04" class="w-md"></div></div>
+            <div id="c3-burst-l" class="burst clip__burst-l"></div>
+            <div id="c3-burst-r" class="burst clip__burst-r"></div>
+            <div id="c3-dmg" class="float-num float-num--muted clip__num-c">NO DAMAGE</div>
+          </div>
+
+          <div id="clip4" class="abs clip">
+            <div class="clip__cap">Empty field · <b>Direct Strike</b> with full ATK</div>
+            <div id="c4-a" class="clip__l"><div data-card="titan-03" class="w-md"></div></div>
+            <div class="clip__r empty-field">NO MACHINES</div>
+            <div id="c4-dmg" class="float-num float-num--big clip__num-r">−2800</div>
+            <div id="c4-dmg2" class="float-num float-num--big clip__num-r">−2800</div>
+            <div class="hp-bar hp-bar--red clip__hp">
+              <span class="hp-bar__label">AI</span>
+              <div class="hp-bar__track"><i id="c4-fill" class="hp-bar__fill"></i></div>
+              <span id="c4-hp" class="hp-bar__val">5600</span>
+            </div>
+          </div>
+          <div id="win-banner" class="abs win-banner">HP <b>0</b> → <span>YOU WIN</span></div>
+        </section>
+
+        <!-- ============ S10 AI TITLE 161 - 164 ============ -->
+        <section id="s-aititle" class="scene">
+          <div id="ai-title" class="abs ai-title">
+            <div class="brain">
+              <span></span><span></span><span></span><span></span><span></span><span></span>
+            </div>
+            <span class="kicker">THE MOST IMPORTANT PART</span>
+            <h2>How the AI Thinks</h2>
+            <p class="ar">إزاي الـ AI بيفكر</p>
+          </div>
+        </section>
+
+        <!-- ============ S11 ENGINE 164 - 173.4 ============ -->
+        <section id="s-engine" class="scene">
+          <div id="en-ui" class="abs node node--ui"><b>UI</b><span>User Interface</span></div>
+          <div id="en-ui-stamp" class="abs stamp stamp--big">DOESN'T DECIDE THE RULES</div>
+
+          <div id="en-human" class="abs node node--cyan"><b>HUMAN</b><span>you</span></div>
+          <div id="en-ai" class="abs node node--red"><b>AI</b><span>opponent</span></div>
+          <div id="en-engine" class="abs node node--engine"><b>GAME ENGINE</b><span>the only rule keeper</span></div>
+          <div id="en-line-l" class="abs wire wire--l"><i></i></div>
+          <div id="en-line-r" class="abs wire wire--r"><i></i></div>
+          <div id="en-pk-l" class="abs packet">action</div>
+          <div id="en-pk-r" class="abs packet packet--red">action</div>
+          <div id="en-badge" class="abs rule-badge rule-badge--ok"><span class="rule-badge__icon">✓</span><span>Same rules as you · <b>no cheating</b></span></div>
+        </section>
+
+        <!-- ============ S12 PIPELINE 173.5 - 235.4 ============ -->
+        <section id="s-pipe" class="scene">
+          <div id="steps" class="abs steps">
+            <div id="st-1" class="step"><span class="step__n">1</span><span class="step__t">Legal Actions</span><i id="st-1-on" class="step__on"></i></div>
+            <div id="st-2" class="step"><span class="step__n">2</span><span class="step__t">Simulate</span><i id="st-2-on" class="step__on"></i></div>
+            <div id="st-3" class="step"><span class="step__n">3</span><span class="step__t">Evaluate</span><i id="st-3-on" class="step__on"></i></div>
+            <div id="st-4" class="step"><span class="step__n">4</span><span class="step__t">Pick</span><i id="st-4-on" class="step__on"></i></div>
+          </div>
+          <div id="steps-intro" class="abs mega mega--mid">4 steps before <em>every</em> move</div>
+
+          <!-- Step 1 -->
+          <div id="b1" class="abs body">
+            <div class="chips">
+              <div class="act"><i>SUMMON</i>TITAN-03</div>
+              <div class="act"><i>SUMMON</i>A-47</div>
+              <div class="act act--trap"><i>TRAP</i>Git Merge → PX-01</div>
+              <div class="act act--trap"><i>TRAP</i>Circuit Breaker → NX-00</div>
+              <div class="act act--trap"><i>TRAP</i>Observer → UNIT-08</div>
+              <div class="act act--atk"><i>ATTACK</i>UNIT-08 → RX-17</div>
+              <div class="act act--phase"><i>PHASE</i>Go to Battle Phase</div>
+            </div>
+            <div class="b1-count"><span id="b1-n">0</span> legal actions</div>
+          </div>
+
+          <!-- Step 2 -->
+          <div id="b2" class="abs body">
+            <div id="b2-real" class="board board--real">
+              <span class="board__tag">REAL GAME</span>
+              <div class="board__row"><i class="m"></i><i class="m"></i></div>
+              <div class="board__row"><i class="m m--c"></i><i class="m m--c"></i></div>
+              <div id="b2-lock" class="board__lock">UNTOUCHED</div>
+            </div>
+            <div id="b2-q" class="bubble bubble--think">"What if I do this?"</div>
+            <div id="b2-c1" class="board board--clone b2-c1"><span class="board__tag">CLONE 1 · Summon TITAN-03</span><div id="b2-r1" class="board__res">+ TITAN-03 on field</div><span class="sandbox">SANDBOX</span></div>
+            <div id="b2-c2" class="board board--clone b2-c2"><span class="board__tag">CLONE 2 · Git Merge</span><div id="b2-r2" class="board__res">PX-01 · 4500 ATK</div><span class="sandbox">SANDBOX</span></div>
+            <div id="b2-c3" class="board board--clone b2-c3"><span class="board__tag">CLONE 3 · Circuit Breaker</span><div id="b2-r3" class="board__res">NX-00 destroyed</div><span class="sandbox">SANDBOX</span></div>
+            <div id="b2-c4" class="board board--clone b2-c4"><span class="board__tag">CLONE 4 · Observer</span><div id="b2-r4" class="board__res">UNIT-08 · 3100 ATK</div><span class="sandbox">SANDBOX</span></div>
+          </div>
+
+          <!-- Step 3 -->
+          <div id="b3" class="abs body">
+            <div id="b3-clones" class="b3-clones">
+              <div class="mini-clone">CLONE 1<b id="b3-s1" class="score-pop">454.6</b></div>
+              <div class="mini-clone">CLONE 2<b id="b3-s2" class="score-pop">455.1</b></div>
+              <div class="mini-clone">CLONE 3<b id="b3-s3" class="score-pop">455.9</b></div>
+              <div class="mini-clone">CLONE 4<b id="b3-s4" class="score-pop">412.6</b></div>
+            </div>
+            <div id="b3-chart" class="chart">
+              <div class="chart__head">score = sum of weighted factors</div>
+              <div class="chart__axis"></div>
+              <div id="f1" class="frow" style="--w:170px"><span class="frow__l">HP advantage</span><div class="frow__bar pos"></div><span class="frow__v">+</span></div>
+              <div id="f2" class="frow" style="--w:240px"><span class="frow__l">Board power vs yours</span><div class="frow__bar pos"></div><span class="frow__v">+</span></div>
+              <div id="f3" class="frow" style="--w:210px"><span class="frow__l">Damage it can deal</span><div class="frow__bar pos"></div><span class="frow__v">+</span></div>
+              <div id="f4" class="frow" style="--w:170px"><span class="frow__l">Damage you can deal</span><div class="frow__bar neg"></div><span class="frow__v">−</span></div>
+              <div id="f5" class="frow" style="--w:420px"><span class="frow__l">Lethal bonus</span><div class="frow__bar pos big"></div><span class="frow__v">+4000</span></div>
+              <div id="f6" class="frow" style="--w:260px"><span class="frow__l">Survive penalty</span><div class="frow__bar neg big"></div><span class="frow__v">−3200</span></div>
+              <div id="f7" class="frow" style="--w:110px"><span class="frow__l">Hand quality</span><div class="frow__bar pos"></div><span class="frow__v">+</span></div>
+              <div id="f8" class="frow" style="--w:150px"><span class="frow__l">Fusion ready / close</span><div class="frow__bar pos"></div><span class="frow__v">+</span></div>
+            </div>
+          </div>
+
+          <!-- Step 4 -->
+          <div id="b4a" class="abs body">
+            <div class="cands">
+              <div class="cand cand--win" id="b4a-win"><span>TITAN-03 attacks directly</span><b>WIN</b></div>
+              <div class="cand" id="b4a-r1"><span>Circuit Breaker (NX-00)</span><b>455.9</b></div>
+              <div class="cand" id="b4a-r2"><span>Git Merge → PX-01</span><b>455.1</b></div>
+              <div class="cand" id="b4a-r3"><span>Go to Battle Phase</span><b>388.1</b></div>
+            </div>
+            <div id="b4a-note" class="rule-badge rule-badge--gold b4a-note"><span class="rule-badge__icon">★</span><span>Winning move → <b>taken instantly</b></span></div>
+          </div>
+
+          <div id="b4b" class="abs body">
+            <div class="cands cands--b">
+              <div class="cand"><span>Circuit Breaker (NX-00)</span><b>455.9</b></div>
+              <div class="cand"><span>Git Merge → PX-01</span><b>455.1</b></div>
+              <div class="cand"><span>Summon TITAN-03</span><b>454.6</b></div>
+              <div class="cand"><span>Observer (UNIT-08)</span><b>412.6</b></div>
+              <div class="cand"><span>Go to Battle Phase</span><b>388.1</b></div>
+              <div class="cand"><span>Summon A-47</span><b>301.2</b></div>
+              <div id="b4b-top" class="cand-hl cand-hl--top"></div>
+              <div id="b4b-bracket" class="bracket"><span>near-ties · within 1.5</span></div>
+              <div id="b4b-pick" class="cand-hl cand-hl--pick"></div>
+            </div>
+            <div id="b4b-top-lbl" class="b4b-lbl">HIGHEST SCORE</div>
+            <div id="b4b-rand" class="b4b-lbl b4b-lbl--pick">RANDOM PICK → not predictable</div>
+          </div>
+
+          <div id="b4c" class="abs body">
+            <div id="b4c-chip" class="act act--trap b4c-chip"><i>TRAP</i>Git Merge → PX-01</div>
+            <div class="node node--engine b4c-engine"><b>GAME ENGINE</b><span>dispatch</span></div>
+            <div id="b4c-loop" class="loop"><div id="b4c-ring" class="loop__ring"></div><span>re-think after <b>every</b> move</span></div>
+          </div>
+        </section>
+
+        <!-- ============ S13 FAIR PLAY 235.6 - 240.9 ============ -->
+        <section id="s-fair" class="scene">
+          <div id="fair-eye" class="abs eye-slash"><span class="eye-slash__eye"></span><span id="fair-slash" class="eye-slash__line"></span></div>
+          <div id="fair-head" class="abs mega mega--mid">Never reads <em>your hand</em></div>
+          <div id="fair-hand" class="abs hand hand--big">
+            <div class="cardback"></div><div class="cardback"></div><div class="cardback"></div><div class="cardback"></div><div class="cardback"></div>
+          </div>
+          <div id="fair-vis" class="abs chip-row chip-row--sm">
+            <span class="pill">Field</span><span class="pill">HP</span><span class="pill">Its own cards</span>
+          </div>
+          <div id="fair-vis-lbl" class="abs caption">Judges only what's visible</div>
+        </section>
+
+        <!-- ============ S14 AI DEBUGGER 241 - 255.5 ============ -->
+        <section id="s-debug" class="scene">
+          <div id="dbg" class="abs dbg">
+            <div class="dbg__tabs"><span>Game State</span><span id="dbg-tab" class="is-active">AI Debugger</span></div>
+            <p class="dbg__meta">Turn 6 · ai · main</p>
+            <div id="dbg-sec1" class="dbg__sec">
+              <h6>Selected action</h6>
+              <p class="dbg__pick">Git Merge → PX-01</p>
+              <p class="dbg__muted">Score 455.1 · 38 ms</p>
+            </div>
+            <div id="dbg-sec2" class="dbg__sec">
+              <h6>Candidates</h6>
+              <ol class="dbg__list">
+                <li><span>Circuit Breaker (NX-00)</span><b>455.9</b></li>
+                <li class="is-chosen"><span>Git Merge → PX-01</span><b>455.1</b></li>
+                <li><span>Summon TITAN-03</span><b>454.6</b></li>
+                <li><span>Observer (UNIT-08)</span><b>412.6</b></li>
+                <li><span>Go to Battle Phase</span><b>388.1</b></li>
+              </ol>
+            </div>
+            <div id="dbg-sec3" class="dbg__sec">
+              <h6>Evaluation breakdown</h6>
+              <div class="dbg__row"><span>hpAdvantage</span><b>+96.0</b></div>
+              <div class="dbg__row"><span>boardAdvantage</span><b>+245.0</b></div>
+              <div class="dbg__row"><span>damagePotential</span><b>+132.0</b></div>
+              <div class="dbg__row"><span>threatResponse</span><b>−80.0</b></div>
+              <div class="dbg__row"><span>fusionPotential</span><b>+22.1</b></div>
+              <div class="dbg__row dbg__total"><span>Total</span><b>455.1</b></div>
+            </div>
+            <i id="dbg-hl1" class="dbg-hl dbg-hl--1"></i>
+            <i id="dbg-hl2" class="dbg-hl dbg-hl--2"></i>
+            <i id="dbg-hl3" class="dbg-hl dbg-hl--3"></i>
+          </div>
+          <div id="dbg-co1" class="abs co co--1"><i></i>The move it chose</div>
+          <div id="dbg-co2" class="abs co co--2"><i></i>Every candidate + its score</div>
+          <div id="dbg-co3" class="abs co co--3"><i></i>Why: each factor's share</div>
+
+          <div id="bbox" class="abs bbox">
+            <div id="bbox-rays" class="bbox__rays"></div>
+            <div id="bbox-lid" class="bbox__lid"></div>
+            <div class="bbox__body">?</div>
+          </div>
+          <div id="bbox-lbl" class="abs bbox-lbl">NOT A<br><b>BLACK BOX</b></div>
+          <div id="bbox-sub" class="abs caption bbox-sub">Every decision has a reason you can see</div>
+        </section>
+
+        <!-- ============ S15 OUTRO 255.7 - 269.56 ============ -->
+        <section id="s-outro" class="scene">
+          <h1 id="out-logo" class="mega">DEV DUEL</h1>
+          <p id="out-t1" class="abs out-line">Yu-Gi-Oh with a <b>developer's soul</b></p>
+          <p id="out-t2" class="abs out-line out-line--sm">An AI opponent that thinks before every move — and shows you why</p>
+          <div id="out-bot" class="abs bot-wrap bot-wrap--sm">
+            <div class="bot">
+              <div class="bot-antenna"></div>
+              <div class="bot-head"><div class="bot-visor"><span class="eye"></span><span class="eye"></span></div></div>
+              <div class="bot-body"><div class="bot-core"></div></div>
+            </div>
+          </div>
+          <div id="out-thanks" class="abs bubble">Thanks for watching!</div>
+          <div id="out-btn" class="abs cta">Initialize Duel</div>
+          <p id="out-dare" class="abs out-line out-line--sm">Think you can beat my relative?</p>
+          <p id="out-credit" class="abs credit">Built by <b>Ahmed Saber</b></p>
+        </section>
+
+        <!-- ============ HUD ============ -->
+        <div id="hud-logo" class="abs hud-logo">DEV DUEL</div>
+        <div id="hud-ch-0" class="abs hud-ch">INDEX</div>
+        <div id="hud-ch-1" class="abs hud-ch">01 · THE INSPIRATION</div>
+        <div id="hud-ch-2" class="abs hud-ch">02 · THE CARDS</div>
+        <div id="hud-ch-3" class="abs hud-ch">03 · GAME RULES</div>
+        <div id="hud-ch-4" class="abs hud-ch hud-ch--hot">04 · HOW THE AI THINKS</div>
+        <div id="hud-progress" class="abs hud-progress"><i id="hud-progress-fill"></i></div>
+      </div>
+    </div>
+
+    <div id="start-overlay">
+      <div class="start-box">
+        <h2>DEV DUEL · Motion Graphic</h2>
+        <p>Timed to <code>audio.wav</code> (4:29.56)</p>
+        <button id="btn-audio" type="button">Play with audio</button>
+        <button id="btn-silent" type="button">Play silent</button>
+        <p class="hint">Space: play/pause · ← →: seek 5s · URL params: <code>?t=120</code> <code>?hud=1</code> <code>?autoplay=1</code> <code>?mode=record</code></p>
+      </div>
+    </div>
+    <div id="timecode"></div>
+    <audio id="audio" src="audio.wav" preload="auto"></audio>
+
+    <script src="cards.js"></script>
+    <script src="timeline.js"></script>
+  </body>
+</html>
